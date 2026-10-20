@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <title>AdsMe — Great Ads. Made Smarter.</title>
+  <style>
+    :root {
+      --yellow: #f5d84e;
+      --white: #f5f3ed;
+      --black: #050505;
+      --panel: #111111;
+      --muted: #a5a5a5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--black);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 6%;
+      border-bottom: 1px solid #242424;
+      position: sticky;
+      top: 0;
+      background: #050505;
+      z-index: 5;
+    }
+
+    .logo {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+    }
+
+    .logo span { color: var(--yellow); }
+    .logo b { color: var(--white); }
+
+    nav { display: flex; gap: 22px; }
+
+    a {
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    nav a:hover { color: var(--yellow); }
+
+    .hero {
+      padding: 65px 6% 45px;
+      background: radial-gradient(ellipse at top right, #28200b, #050505 65%);
+    }
+
+    .tag {
+      color: var(--yellow);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: clamp(42px, 8vw, 76px);
+      line-height: 1.05;
+      max-width: 750px;
+      margin: 18px 0;
+    }
+
+    h1 span { color: var(--yellow); }
+
+    .intro {
+      color: #c2c2c2;
+      max-width: 560px;
+      line-height: 1.8;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 22px;
+      border-radius: 8px;
+      background: var(--yellow);
+      color: #080808;
+      font-weight: bold;
+    }
+
+    section { padding: 35px 6%; }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    h2 { font-size: 25px; margin: 0; }
+    .yellow { color: var(--yellow); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid #292929;
+      border-radius: 14px;
+      padding: 20px;
+      min-height: 150px;
+    }
+
+    .symbol {
+      font-size: 30px;
+      color: var(--yellow);
+      margin-bottom: 18px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .campaign-status {
+      color: var(--yellow);
+      font-size: 12px;
+    }
+
+    footer {
+      border-top: 1px solid #252525;
+      padding: 28px 6%;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 520px) {
+      header { padding: 16px 5%; }
+      .logo { font-size: 26px; }
+      nav { gap: 12px; font-size: 13px; }
+      .hero { padding: 48px 5% 30px; }
+      section { padding: 28px 5%; }
+      h2 { font-size: 21px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="logo" href="#home" aria-label="AdsMe home">
+      <span>Ads</span><b>Me</b>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#home">Home</a>
+      <a href="#explore">Explore</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="tag">Welcome to AdsMe</div>
+      <h1>Great ads.<br>Made <span>smarter.</span></h1>
+      <p class="intro">
+        Discover creative campaigns, inspiring products, and
+        brands worth noticing. One destination for advertising.
+      </p>
+      <a class="button" href="#explore">Explore Ads &rarr;</a>
+    </section>
+
+    <section id="explore">
+      <div class="section-heading">
+        <h2>Featured Ads</h2>
+        <span class="yellow">Discover more &rarr;</span>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="symbol">✦</div>
+          <h3>Style & Fashion</h3>
+          <p>Creative campaigns that make a statement.</p>
+        </article>
+        <article class="card">
+          <div class="symbol">◈</div>
+          <h3>Food & Drinks</h3>
+          <p>Discover brands with something special.</p>
+        </article>
+        <article class="card">
+          <div class="symbol">⌚</div>
+          <h3>Technology</h3>
+          <p>Explore products and new ideas.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="campaigns">
+      <div class="section-heading">
+        <h2>Latest Campaigns</h2>
+        <span class="campaign-status">ADSMe ORIGINALS</span>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="symbol">01</div>
+          <h3>Creative Spotlight</h3>
+          <p>A sample AdsMe campaign concept.</p>
+        </article>
+        <article class="card">
+          <div class="symbol">02</div>
+          <h3>Brand Stories</h3>
+          <p>Ideas that help brands connect with people.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="tag">Our vision</div>
+      <h2>Advertising deserves a smarter destination.</h2>
+      <p class="intro">
+        AdsMe is building a connected home for creative advertising.
+        Our goal is to help people discover great campaigns and
+        help brands reach their audiences.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="logo"><span>Ads</span><b>Me</b></div>
+    <p>Great ads. Made smarter.</p>
+    <p>&copy; 2026 AdsMe. All rights reserved.</p>
+  </footer>
+</body>
+</html>
