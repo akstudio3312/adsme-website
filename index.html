@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AdsMe - Great Ads. Made Smarter. Discover products, shops, brands and services through video advertisements.">
+  <title>AdsMe | Great Ads. Made Smarter.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <div class="overlay" id="overlay"></div>
+  <aside class="sidebar" id="sidebar" aria-label="Menu">
+    <button class="icon-btn close-btn" id="closeSidebar" aria-label="Close menu">&times;</button>
+
+    <div class="side-brand">
+      <div class="logo-box">A</div>
+      <h2 class="brand-name"><span class="ads">Ads</span><span class="me">Me</span></h2>
+      <p class="tagline">Great Ads. Made Smarter.</p>
+    </div>
+
+    <nav class="side-links">
+      <!-- Replace each # with your official AdsMe social URL -->
+      <a href="#" class="side-link" target="_blank" rel="noopener" id="linkInstagram">
+        <svg class="soc" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#E1306C"/></svg>
+        <span>Instagram</span><span class="arrow">&rsaquo;</span>
+      </a>
+      <a href="#" class="side-link" target="_blank" rel="noopener" id="linkYoutube">
+        <svg class="soc" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><path d="M10 9l5 3-5 3z" fill="#fff"/></svg>
+        <span>YouTube</span><span class="arrow">&rsaquo;</span>
+      </a>
+      <a href="#" class="side-link" target="_blank" rel="noopener" id="linkWhatsapp">
+        <svg class="soc" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2"><path d="M3 21l1.6-4.8A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 8.5c0 3 3 6 6 6l1-1.5-2-1-1 .8c-1-.5-2-1.5-2.5-2.5l.8-1-1-2z" fill="#25D366" stroke="none"/></svg>
+        <span>WhatsApp Channel</span><span class="arrow">&rsaquo;</span>
+      </a>
+      <hr>
+      <a href="#about" class="side-link" data-close>
+        <svg class="soc" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>
+        <span>About AdsMe</span><span class="arrow">&rsaquo;</span>
+      </a>
+    </nav>
+
+    <div class="side-card">
+      <div class="spark">&#10022;</div>
+      <p>Join creators and brands who trust AdsMe to showcase their best work.</p>
+      <p>Let's build something <span class="hl">amazing</span> together.</p>
+    </div>
+  </aside>
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar">
+    <a href="#home" class="brand">
+      <div class="logo-box sm">A</div>
+      <span class="brand-name"><span class="ads">Ads</span><span class="me">Me</span></span>
+    </a>
+    <div class="top-actions">
+      <button class="btn-google" id="googleSignIn">
+        <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#4285F4" d="M22 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.6a4.8 4.8 0 0 1-2.1 3.1v2.6h3.4c2-1.8 3.1-4.5 3.1-7.5z"/><path fill="#34A853" d="M12 22c2.8 0 5.1-.9 6.9-2.5l-3.4-2.6c-.9.6-2.1 1-3.5 1-2.7 0-5-1.8-5.800-4.300H2.700v2.700A10 10 0 0 0 12 22z"/><path fill="#FBBC05" d="M6.200 13.600a6 6 0 0 1 0-3.800V7.100H2.700a10 10 0 0 0 0 9.200z"/><path fill="#EA4335" d="M12 6c1.500 0 2.900.5 4 1.600l3-3A10 10 0 0 0 2.700 7.100l3.500 2.700C7 7.800 9.300 6 12 6z"/></svg>
+        <span>Sign in</span>
+      </button>
+      <button class="icon-btn" id="openSidebar" aria-label="Open menu">
+        <span class="bars"></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HOME ============ -->
+    <section id="home" class="section">
+      <div class="search-wrap">
+        <label class="sr-only" for="searchInput">Search advertisements</label>
+        <input type="search" id="searchInput" placeholder="Search ads, brands, shops..." aria-label="Search advertisements">
+      </div>
+      <p class="search-status" id="searchStatus" aria-live="polite" hidden></p>
+
+      <!-- Hero carousel -->
+      <div class="carousel" id="carousel">
+        <article class="hero g-shoe">
+          <span class="cat">FOOTWEAR</span>
+          <h2>Made to make you notice.</h2>
+          <p>Step up your game with unmatched comfort and iconic style.</p>
+          <div class="hero-btns"><a href="#" class="btn-yellow">View Ad &rarr;</a><button class="btn-circle" aria-label="Save">+</button></div>
+        </article>
+        <article class="hero g-drink">
+          <span class="cat">BEVERAGE</span>
+          <h2>Brewed happiness in every sip.</h2>
+          <p>Crafted with care. Made for moments that matter.</p>
+          <div class="hero-btns"><a href="#" class="btn-yellow">View Ad &rarr;</a><button class="btn-circle" aria-label="Save">+</button></div>
+        </article>
+        <article class="hero g-tech">
+          <span class="cat">TECHNOLOGY</span>
+          <h2>Next level, right in your hand.</h2>
+          <p>Power, speed and design that keep up with you.</p>
+          <div class="hero-btns"><a href="#" class="btn-yellow">View Ad &rarr;</a><button class="btn-circle" aria-label="Save">+</button></div>
+        </article>
+        <article class="hero g-home">
+          <span class="cat">HOME AND FURNITURE</span>
+          <h2>Design your comfort.</h2>
+          <p>Furniture that makes every room feel like yours.</p>
+          <div class="hero-btns"><a href="#" class="btn-yellow">View Ad &rarr;</a><button class="btn-circle" aria-label="Save">+</button></div>
+        </article>
+      </div>
+      <div class="dots" id="dots"><i class="on"></i><i></i><i></i><i></i></div>
+
+      <!-- Featured Ads -->
+      <div class="sec-head"><h3>Featured Ads</h3><a href="#explore">See all &rsaquo;</a></div>
+      <div class="row">
+        <article class="mini-card g-perfume" data-title="fragrance bold by nature"><small>FRAGRANCE</small><p>Bold by Nature.</p><button class="btn-circle sm" aria-label="Open">+</button></article>
+        <article class="mini-card g-watch" data-title="watches time refined"><small>WATCHES</small><p>Time, refined.</p><button class="btn-circle sm" aria-label="Open">+</button></article>
+        <article class="mini-card g-home" data-title="furniture design your comfort"><small>FURNITURE</small><p>Design your comfort.</p><button class="btn-circle sm" aria-label="Open">+</button></article>
+        <article class="mini-card g-food" data-title="food and beverage fresh taste"><small>FOOD</small><p>Fresh taste.</p><button class="btn-circle sm" aria-label="Open">+</button></article>
+      </div>
+    </section>
+
+    <!-- ============ EXPLORE ============ -->
+    <section id="explore" class="section">
+      <div class="sec-head"><h3>Explore Ads</h3></div>
+      <div class="chips" id="chips">
+        <button class="chip on" data-cat="all">All</button>
+      </div>
+      <p class="search-results-label" id="resultsLabel" aria-live="polite" hidden></p>
+      <div class="grid" id="adGrid">
+        <!-- Published advertisements are loaded from Supabase. -->
+        <p class="empty" id="emptyMsg">No advertisements published yet. Check back soon.</p>
+      </div>
+    </section>
+
+    <!-- ============ CATEGORIES ============ -->
+    <section id="categories" class="section">
+      <div class="sec-head"><h3>Categories</h3></div>
+      <div class="cat-grid" id="catGrid"></div>
+    </section>
+
+    <!-- ============ CAMPAIGNS ============ -->
+    <section id="campaigns" class="section">
+      <div class="sec-head"><h3>My Campaigns</h3><a href="#campaigns">See all &rsaquo;</a></div>
+      <div class="row">
+        <article class="camp"><div class="thumb g-shoe2"><span class="badge active">Active</span></div><div class="camp-info"><b>Summer Drop 2026</b><small>Footwear Campaign</small></div></article>
+        <article class="camp"><div class="thumb g-drink2"><span class="badge draft">Draft</span></div><div class="camp-info"><b>Green Energy</b><small>Beverage Campaign</small></div></article>
+        <article class="camp"><div class="thumb g-tech"><span class="badge active">Active</span></div><div class="camp-info"><b>Next Level</b><small>Tech Campaign</small></div></article>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="section about">
+      <div class="sec-head"><h3>About <span class="ads">Ads</span><span class="me">Me</span></h3></div>
+      <p><b>What it is.</b> AdsMe brings advertisements for products, shops, brands, companies and services together in one place.</p>
+      <p><b>Vision.</b> A global platform where people discover brands and businesses through engaging video advertisements.</p>
+      <p><b>Mission.</b> Make advertising accessible to businesses of all sizes and help people discover products and services.</p>
+      <p><b>How it works.</b> Businesses contact AdsMe. We review and publish approved ads. Visitors watch, discover and reach out to advertisers.</p>
+      <p><b>Advertise with us.</b> Contact AdsMe through our social channels in the menu.</p>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">©️ 2026. AdsMe | AK studio.all rights reserved</footer>
+
+  <!-- ============ BOTTOM NAV (changes by account type) ============ -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="#home" class="nav-item on" data-nav="home"><span class="ic">&#8962;</span>Home</a>
+    <a href="#explore" class="nav-item" data-nav="explore"><span class="ic">&#9906;</span>Explore</a>
+    <!-- Third tab is set by script.js: Sign In / Profile / Admin Dashboard -->
+    <a href="#" class="nav-item third" id="thirdTab"><span class="ic">&#9786;</span><span id="thirdLabel">Sign In</span></a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
