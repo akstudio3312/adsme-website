@@ -648,6 +648,7 @@ async function renderAdminUpload(panel){
     save.disabled = true;
     save.textContent = "Uploading…";
     const uploadedPaths = [];
+    let adRecordInserted = false;
     try {
       const token = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
       const extension = file => file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -677,11 +678,26 @@ async function renderAdminUpload(panel){
         result = await supabaseClient.from("ads").insert(coreRecord);
       }
       if (result.error) throw result.error;
+      adRecordInserted = true;
+
+      const { data: savedAd, error: verifyError } = await supabaseClient
+        .from("ads")
+        .select("id,title,status")
+        .eq("video_path", videoPath)
+        .eq("thumbnail_path", thumbnailPath)
+        .maybeSingle();
+      if (verifyError) throw new Error(`The ad row was submitted, but AdsMe could not verify it: ${verifyError.message}`);
+      if (!savedAd) throw new Error("The media uploaded, but no matching ad row was found in the ads table.");
+
       await refreshPublicContent();
-      showToast("Advertisement uploaded.");
+      showToast(`Advertisement saved: ${savedAd.title} (${savedAd.status}).`);
       openPageAfterAdminAction("Manage Ads");
     } catch (error){
-      if (uploadedPaths.length) await supabaseClient.storage.from(MEDIA_BUCKET).remove(uploadedPaths);
+      if (!adRecordInserted && uploadedPaths.length){
+        const { error: cleanupError } = await supabaseClient.storage.from(MEDIA_BUCKET).remove(uploadedPaths);
+        if (cleanupError) console.warn("Could not clean up incomplete ad media:", cleanupError.message);
+      }
+      console.error("AdsMe upload failed:", error);
       showToast(`Upload failed: ${error.message}`);
       save.disabled = false;
       save.textContent = "Upload advertisement";
