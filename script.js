@@ -172,9 +172,13 @@ sidebar.querySelectorAll("[data-close]").forEach(link => link.addEventListener("
 
 // Carousel dots
 const carousel = $("#carousel");
-const dots = $$("#dots i");
+const dotsContainer = $("#dots");
+const previewCarouselMarkup = carousel.innerHTML;
+const previewDotsMarkup = dotsContainer.innerHTML;
 carousel.addEventListener("scroll", () => {
   if (!carousel.firstElementChild) return;
+  const dots = $("#dots i");
+  if (!dots.length) return;
   const width = carousel.firstElementChild.getBoundingClientRect().width + 14;
   const activeIndex = Math.min(dots.length - 1, Math.round(carousel.scrollLeft / width));
   dots.forEach((dot, index) => dot.classList.toggle("on", index === activeIndex));
@@ -260,6 +264,73 @@ function createAdCard(ad, previewMode){
 
   card.append(media, info);
   return card;
+}
+
+function renderHeroCarousel(){
+  const featuredAds = liveAds.filter(ad => ad.is_featured === true);
+
+  if (!featuredAds.length){
+    if (carousel.dataset.hasLiveAds === "true"){
+      carousel.innerHTML = previewCarouselMarkup;
+      dotsContainer.innerHTML = previewDotsMarkup;
+      delete carousel.dataset.hasLiveAds;
+    }
+    return;
+  }
+
+  carousel.replaceChildren();
+  dotsContainer.replaceChildren();
+  featuredAds.forEach((ad, index) => {
+    const slide = document.createElement("article");
+    slide.className = "hero";
+    if (ad.thumbnailUrl){
+      slide.style.backgroundImage = `linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.78)),url(${JSON.stringify(ad.thumbnailUrl)})`;
+      slide.style.backgroundSize = "cover";
+      slide.style.backgroundPosition = "center";
+    } else {
+      slide.classList.add("g-tech");
+    }
+
+    const category = document.createElement("span");
+    category.className = "cat";
+    category.textContent = ad.category || "Other";
+
+    const title = document.createElement("h2");
+    title.textContent = ad.title || "Untitled advertisement";
+
+    const description = document.createElement("p");
+    description.textContent = ad.description || "";
+
+    const actions = document.createElement("div");
+    actions.className = "hero-btns";
+    const viewLink = document.createElement("a");
+    viewLink.href = "#explore";
+    viewLink.className = "btn-yellow";
+    viewLink.textContent = "View Ad →";
+    viewLink.addEventListener("click", () => {
+      searchInput.value = ad.title || "";
+      selectChip("all");
+      updateSearchResults();
+      document.getElementById("explore").scrollIntoView({ behavior: "smooth" });
+    });
+
+    const saveButton = document.createElement("button");
+    saveButton.type = "button";
+    saveButton.className = "btn-circle";
+    saveButton.setAttribute("aria-label", "Save");
+    saveButton.textContent = "+";
+    actions.append(viewLink, saveButton);
+    slide.append(category, title);
+    if (description.textContent) slide.appendChild(description);
+    slide.appendChild(actions);
+    carousel.appendChild(slide);
+
+    const dot = document.createElement("i");
+    if (index === 0) dot.className = "on";
+    dotsContainer.appendChild(dot);
+  });
+  carousel.dataset.hasLiveAds = "true";
+  carousel.scrollLeft = 0;
 }
 
 function updateSearchResults(){
@@ -374,6 +445,7 @@ async function refreshPublicContent(){
   try {
     await loadReferenceData();
     await loadPublishedAds();
+    renderHeroCarousel();
     updateSearchResults();
   } catch (error){
     console.error("AdsMe content could not be loaded:", error.message);
