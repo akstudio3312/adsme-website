@@ -692,7 +692,7 @@ async function renderAdminUpload(panel){
         title: title.value.trim(), description: description.value.trim(),
         category_id: category.value, campaign_id: campaign.value || null,
         video_path: videoPath, thumbnail_path: thumbnailPath,
-        status: status.value, featured: featured.checked
+        status: status.value, is_featured: featured.checked
       };
       const extendedRecord = {
         ...coreRecord,
