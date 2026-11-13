@@ -56,6 +56,7 @@ let adminChoiceDialog;
 let profileDialog;
 let adminInfoDialog;
 let toastTimer;
+let uploadNoticeState = null;
 
 function showToast(message){
   let toast = $("#adsmeToast");
@@ -65,12 +66,29 @@ function showToast(message){
     toast.className = "adsme-toast";
     toast.setAttribute("role", "status");
     toast.setAttribute("aria-live", "polite");
-    document.body.appendChild(toast);
   }
+  // A modal is in the browser's top layer; body-level notifications sit behind it.
+  const host = [...document.querySelectorAll("dialog[open]")].pop() || document.body;
+  if (toast.parentElement !== host) host.appendChild(toast);
   toast.textContent = message;
   toast.classList.add("show");
   window.clearTimeout(toastTimer);
   toastTimer = window.setTimeout(() => toast.classList.remove("show"), 4200);
+}
+
+function renderUploadNotice(){
+  const notice = document.getElementById("adminUploadNotice");
+  if (!notice) return;
+  notice.hidden = !uploadNoticeState;
+  if (!uploadNoticeState) return;
+  notice.className = uploadNoticeState.error ? "admin-error" : "admin-help";
+  notice.setAttribute("role", uploadNoticeState.error ? "alert" : "status");
+  notice.textContent = uploadNoticeState.message;
+}
+
+function setUploadNotice(message, error = false){
+  uploadNoticeState = { message, error };
+  renderUploadNotice();
 }
 
 function configureSocialLink(id, url, platform){
@@ -549,7 +567,12 @@ function renderAdminDashboard(){
 
   const navigation = makeAdminElement("div", "admin-tabs");
   const panel = makeAdminElement("div", "admin-panel");
-  adminInfoDialog._body.append(navigation, panel);
+  const notice = makeAdminElement("p", "admin-help");
+  notice.id = "adminUploadNotice";
+  notice.hidden = true;
+  notice.setAttribute("aria-atomic", "true");
+  adminInfoDialog._body.append(navigation, notice, panel);
+  renderUploadNotice();
 
   const pages = [
     ["Overview", renderAdminOverview],
@@ -638,17 +661,19 @@ async function renderAdminUpload(panel){
     const imageTypes = ["image/jpeg", "image/png", "image/webp"];
     const maxBytes = 50 * 1024 * 1024;
     if (!videoFile || !thumbnailFile || !videoTypes.includes(videoFile.type) || !imageTypes.includes(thumbnailFile.type)){
-      showToast("Choose a supported video and image file.");
+      setUploadNotice("Choose a supported video and image file.", true);
       return;
     }
     if (videoFile.size > maxBytes || thumbnailFile.size > maxBytes){
-      showToast("Each file must be 50 MB or smaller for this bucket.");
+      setUploadNotice("Each file must be 50 MB or smaller for this bucket.", true);
       return;
     }
     save.disabled = true;
     save.textContent = "Uploading…";
     const uploadedPaths = [];
     let adRecordInserted = false;
+    let stage = "uploading the video";
+    setUploadNotice(`Uploading video (${(videoFile.size / 1024 / 1024).toFixed(1)} MB)…`);
     try {
       const token = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
       const extension = file => file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -657,6 +682,8 @@ async function renderAdminUpload(panel){
       const videoUpload = await supabaseClient.storage.from(MEDIA_BUCKET).upload(videoPath, videoFile, { upsert: false, contentType: videoFile.type, cacheControl: "3600" });
       if (videoUpload.error) throw videoUpload.error;
       uploadedPaths.push(videoPath);
+      stage = "uploading the thumbnail";
+      setUploadNotice("Uploading thumbnail…");
       const imageUpload = await supabaseClient.storage.from(MEDIA_BUCKET).upload(thumbnailPath, thumbnailFile, { upsert: false, contentType: thumbnailFile.type, cacheControl: "3600" });
       if (imageUpload.error) throw imageUpload.error;
       uploadedPaths.push(thumbnailPath);
@@ -665,7 +692,7 @@ async function renderAdminUpload(panel){
         title: title.value.trim(), description: description.value.trim(),
         category_id: category.value, campaign_id: campaign.value || null,
         video_path: videoPath, thumbnail_path: thumbnailPath,
-        status: status.value, featured: featured.checked
+        status: status.value, is_featured: featured.checked
       };
       const extendedRecord = {
         ...coreRecord,
@@ -673,12 +700,16 @@ async function renderAdminUpload(panel){
         website_url: website.value.trim() || null,
         contact_info: contact.value.trim() || null
       };
+      stage = "saving the advertisement details";
+      setUploadNotice("Saving advertisement details…");
       let result = await supabaseClient.from("ads").insert(extendedRecord);
       if (result.error && ["PGRST204", "42703"].includes(result.error.code)){
         result = await supabaseClient.from("ads").insert(coreRecord);
       }
       if (result.error) throw result.error;
       adRecordInserted = true;
+      stage = "confirming the saved advertisement";
+      setUploadNotice("Confirming the advertisement was saved…");
 
       const { data: savedAd, error: verifyError } = await supabaseClient
         .from("ads")
@@ -690,15 +721,25 @@ async function renderAdminUpload(panel){
       if (!savedAd) throw new Error("The media uploaded, but no matching ad row was found in the ads table.");
 
       await refreshPublicContent();
-      showToast(`Advertisement saved: ${savedAd.title} (${savedAd.status}).`);
+      setUploadNotice(`Advertisement saved: ${savedAd.title} (${savedAd.status}).`);
       openPageAfterAdminAction("Manage Ads");
     } catch (error){
-      if (!adRecordInserted && uploadedPaths.length){
-        const { error: cleanupError } = await supabaseClient.storage.from(MEDIA_BUCKET).remove(uploadedPaths);
-        if (cleanupError) console.warn("Could not clean up incomplete ad media:", cleanupError.message);
-      }
+      const detail = error?.message || String(error);
+      const code = error?.code || error?.statusCode;
+      const prefix = adRecordInserted
+        ? "The ad was submitted, but saving could not be confirmed. Check Manage Ads before another upload."
+        : `Upload stopped while ${stage}.`;
+      setUploadNotice(`${prefix} ${detail}${code ? ` (Code: ${code})` : ""}`, true);
       console.error("AdsMe upload failed:", error);
-      showToast(`Upload failed: ${error.message}`);
+      if (!adRecordInserted && uploadedPaths.length){
+        try {
+          const { error: cleanupError } = await supabaseClient.storage.from(MEDIA_BUCKET).remove(uploadedPaths);
+          if (cleanupError) console.warn("Could not clean up incomplete ad media:", cleanupError.message);
+        } catch (cleanupError){
+          console.warn("Could not clean up incomplete ad media:", cleanupError.message);
+        }
+      }
+    } finally {
       save.disabled = false;
       save.textContent = "Upload advertisement";
     }
@@ -885,6 +926,10 @@ async function applySession(session, event){
   const previousUserId = currentUser?.id;
   currentSession = session;
   currentUser = session?.user || null;
+  if (!currentUser || previousUserId !== currentUser.id){
+    uploadNoticeState = null;
+    renderUploadNotice();
+  }
   isSuperAdmin = false;
   if (!currentUser){
     if (previousUserId){
